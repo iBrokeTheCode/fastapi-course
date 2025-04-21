@@ -35,16 +35,14 @@
   pip install "fastapi[standard]"
   ```
 
-  > [!TIP]
-  > In most recent version, `uvicorn` is installed as a dependency so you only need to install FastAPI `poetry add "fastapi[standard]"`
+> [!TIP]
+> In most recent version, `uvicorn` is installed as a dependency so you only need to install FastAPI `poetry add "fastapi[standard]"`
 
 - **Upgrade pip (optional but recommended):** It's a best practice to upgrade pip after creating a virtual environment.
 
   ```bash
   pip install --upgrade pip
   ```
-
----
 
 - **Create a `main.py` file:** This file will contain the FastAPI application code.
 - **Import the `FastAPI` class:** This is the base object for creating a FastAPI application.
@@ -75,8 +73,8 @@
   uvicorn main:app --reload
   ```
 
-  > [!TIP]
-  > In the latest documentation version, FastAPI recommend to use the command `fastapi dev main.py`
+> [!TIP]
+> In the latest documentation version, FastAPI recommend to use the command `fastapi dev main.py`
 
 - **Access the API endpoints in a browser:** Once the server is running, you can access the defined routes (e.g., `http://localhost:8000/` and `http://localhost:8000/about`). The responses will be automatically formatted (e.g., as JSON for dictionaries).
 - **View the automatic API documentation:** Access the Swagger UI at `http://localhost:8000/docs` or the Redoc documentation at `http://localhost:8000/redoc` to explore the API.
