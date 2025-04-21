@@ -2,7 +2,13 @@
 
 ## Table of Contents
 
+- [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md)
+
 ## Summary
+
+- [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md) | [Tutorial](https://youtu.be/Lw-zLopB3o0?si=jyZFx4LbnJOiaryP)
+
+  This lesson provides an introduction to the **FastAPI framework** in Python, highlighting its key features and demonstrating how to set up a basic API with route definitions and automatic documentation. It compares FastAPI with older frameworks like Django and Flask, emphasizing its modern features and performance.
 
 ## Credits
 
