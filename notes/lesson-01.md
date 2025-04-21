@@ -16,6 +16,7 @@
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Install FastAPI](https://fastapi.tiangolo.com/tutorial/)
 - [FastAPI Swagger Docs](https://fastapi.tiangolo.com/tutorial/first-steps/#interactive-api-docs)
+- [FastAPI First Steps](https://fastapi.tiangolo.com/#requirements)
 
 ## 3. Practical Steps
 
@@ -59,18 +60,23 @@
 - **Define an API route using a decorator:** Use the `@app.get()` decorator (for GET requests) followed by the route path and the function that will handle requests to that path.
   ```python
   @app.get("/")
-  async def index():
+  async def index() -> dict[str, str]:
       return {"hello": "world"}
   ```
 - **Define another API route (example):** Demonstrating a different path and return type.
   ```python
   @app.get("/about")
-  async def about():
+  async def about() -> str:
       return "an exceptional company"
   ```
 - **Run the FastAPI application using Uvicorn:** This command starts the development server. Replace `main:app` with the actual filename and the name of your FastAPI application instance if they are different. The `--reload` flag enables automatic server restarts upon code changes, which is useful for development but should not be used in production.
+
   ```bash
   uvicorn main:app --reload
   ```
+
+  > [!TIP]
+  > In the latest documentation version, FastAPI recommend to use the command `fastapi dev main.py`
+
 - **Access the API endpoints in a browser:** Once the server is running, you can access the defined routes (e.g., `http://localhost:8000/` and `http://localhost:8000/about`). The responses will be automatically formatted (e.g., as JSON for dictionaries).
 - **View the automatic API documentation:** Access the Swagger UI at `http://localhost:8000/docs` or the Redoc documentation at `http://localhost:8000/redoc` to explore the API.
