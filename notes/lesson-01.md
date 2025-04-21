@@ -24,24 +24,34 @@
   python -m venv venv_fastapi
   ```
 - **Activate the virtual environment:** This ensures that subsequent package installations are within the created environment.
+
   - On Windows, navigate to the `venv_fastapi\Scripts` directory and run `activate`.
+  - On Linux/macOS, run the command `source venv_fastapi/bin/activate`
+
 - **Install FastAPI using pip:** This command downloads and installs the core FastAPI library.
+
   ```bash
-  pip install fastapi
+  pip install "fastapi[standard]"
   ```
+
+  > [!TIP]
+  > In most recent version, `uvicorn` is installed as a dependency so you only need to install FastAPI `poetry add "fastapi[standard]"`
+
 - **Upgrade pip (optional but recommended):** It's a best practice to upgrade pip after creating a virtual environment.
+
   ```bash
   pip install --upgrade pip
   ```
-- **Install Uvicorn:** Uvicorn is an **ASGI server** that is used to run the FastAPI application.
-  ```bash
-  pip install uvicorn
-  ```
+
+---
+
 - **Create a `main.py` file:** This file will contain the FastAPI application code.
 - **Import the `FastAPI` class:** This is the base object for creating a FastAPI application.
+
   ```python
   from fastapi import FastAPI
   ```
+
 - **Create an instance of the `FastAPI` class:** This initializes the FastAPI application.
   ```python
   app = FastAPI()
