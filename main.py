@@ -15,7 +15,9 @@ app = FastAPI()
 
 
 @app.get('/bands', response_model=list[Band])
-async def get_bands() -> list[Band]:
+async def get_bands(genre: GenreURLChoices | None = None) -> list[Band]:
+    if genre:
+        return [Band(**band) for band in bands_data if band['genre'].lower() == genre.value]
     return [Band(**band) for band in bands_data]
 
 

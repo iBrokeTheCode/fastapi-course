@@ -20,53 +20,35 @@
 1.  **Define a function parameter in your FastAPI path operation function that is not part of the path.** For example, instead of a path like `/bands/{genre}`, modify it to `/bands` and add a `genre` parameter to the function:
 
     ```python
-    from typing import List, Optional
-    from enum import Enum
     from fastapi import FastAPI
-    from pydantic import BaseModel
 
     app = FastAPI()
 
-    class GenreURLChoices(str, Enum):
-        rock = "rock"
-        electronic = "electronic"
-
-    class Band(BaseModel):
-        name: str
-        genre: GenreURLChoices
-        albums: List[str] = []
-
-    bands = [
-        {"name": "The Kinks", "genre": "rock", "albums": []},
-        {"name": "New Order", "genre": "electronic", "albums": ["Power, Corruption & Lies"]},
-        {"name": "The Cure", "genre": "rock", "albums": ["Disintegration"]},
-    ]
-
-    @app.get("/bands")
-    async def list_bands(genre: Optional[GenreURLChoices] = None):
+    @app.get('/bands', response_model=list[Band])
+    async def get_bands(genre: GenreURLChoices | None = None) -> list[Band]:
         if genre:
-            return [band for band in bands if band["genre"] == genre]
-        return bands
+            return [Band(**band) for band in bands_data if band['genre'].lower() == genre.value]
+        return [Band(**band) for band in bands_data]
     ```
 
-    In this lesson, the `/genres/{genre_name}` endpoint was removed, and the `genre` was added as a query parameter to the `/bands` endpoint.
+    The `/genres/{genre_name}` endpoint was removed, and the `genre` was added as a query parameter to the `/bands` endpoint.
 
 2.  **FastAPI interprets function parameters not in the path as query parameters.** In the code above, `genre` is not part of the `/bands` path, so FastAPI understands that it should be passed as a query parameter in the URL (e.g., `/bands?genre=rock`).
 
-3.  **Add type hints to enable automatic type conversion and validation.** In the `list_bands` function, `genre: Optional[GenreURLChoices] = None` specifies that the `genre` query parameter should be of the `GenreURLChoices` enum type or `None`. This ensures that if a value is provided for `genre` in the URL, it will be validated against the allowed values in the `GenreURLChoices` enum.
+3.  **Add type hints to enable automatic type conversion and validation.** In the `list_bands` function, `genre: GenreURLChoices | None = None` specifies that the `genre` query parameter should be of the `GenreURLChoices` enum type or `None`. This ensures that if a value is provided for `genre` in the URL, it will be validated against the allowed values in the `GenreURLChoices` enum.
 
-4.  **Make query parameters optional by providing a default value.** Setting `genre: Optional[GenreURLChoices] = None` makes the `genre` query parameter optional. If the user accesses `/bands` without any query parameters, the `genre` argument in the `list_bands` function will default to `None`, and all bands will be returned. Without a default value, accessing `/bands` would result in an error, as FastAPI would expect the `genre` parameter to be present.
+4.  **Make query parameters optional by providing a default value.** Setting `genre: GenreURLChoices | None = None` makes the `genre` query parameter optional. If the user accesses `/bands` without any query parameters, the `genre` argument in the `list_bands` function will default to `None`, and all bands will be returned. Without a default value, accessing `/bands` would result in an error, as FastAPI would expect the `genre` parameter to be present.
 
 5.  **Access the query parameter within the function to implement filtering logic.** Inside the `list_bands` function, the value of the `genre` query parameter is available through the `genre` argument. The code then checks if a `genre` was provided and filters the `bands` list accordingly.
 
 6.  **Implement filtering based on the query parameter's value.**
 
     ```python
-    @app.get("/bands")
-    async def list_bands(genre: Optional[GenreURLChoices] = None):
+    @app.get('/bands', response_model=list[Band])
+    async def get_bands(genre: GenreURLChoices | None = None) -> list[Band]:
         if genre:
-            return [band for band in bands if band["genre"] == genre] # Filtering based on genre
-        return bands
+            return [Band(**band) for band in bands_data if band['genre'].lower() == genre.value]
+        return [Band(**band) for band in bands_data]
     ```
 
     This code snippet demonstrates how the `genre` query parameter is used to filter the list of bands.
