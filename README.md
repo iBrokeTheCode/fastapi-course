@@ -5,6 +5,7 @@
 1. [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md)
 2. [FastAPI #2 - Path Parameters / Data Validation with Type-Hints & Enums](./notes/lesson-02.md)
 3. [FastAPI and Pydantic - Model Classes and Nested Models](./notes/lesson-03.md)
+4. [FastAPI and Pydantic - URL Query Parameters for Filtering](./notes/lesson-04.md)
 
 ## Summary
 
@@ -19,6 +20,10 @@
 3. [FastAPI and Pydantic - Model Classes and Nested Models](./notes/lesson-03.md) | [Tutorial](https://youtu.be/ID9b4diFZN8?si=GmU65x4o3M9_J6EA)
 
    This lesson introduces the integration of Pydantic with FastAPI for data validation and defining the structure of data within an API. It covers creating model classes using Pydantic and how to work with nested models in a FastAPI application.
+
+4. [FastAPI and Pydantic - URL Query Parameters for Filtering](./notes/lesson-04.md) | [Tutorial](https://youtu.be/Dnp07ZKfdVU?si=WftqGWLMTRM-OK0y)
+
+   In this lesson, we explore how to add and utilize query parameters in FastAPI to filter data in our API endpoints.
 
 ## Credits
 
