@@ -123,32 +123,31 @@ Define a new POST endpoint at `/bands` that accepts `BandCreate` as the request 
 
 ```python
 # main.py
-@app.post("/bands", response_model=BandWithID)
+@app.post('/bands', response_model=BandWithID)
 async def create_band(band_data: BandCreate):
-    new_id = bands[-1]["id"] + 1
-    new_band = BandWithID(id=new_id, **band_data.model_dump())
-    bands.append(new_band.model_dump())
+    generated_id = bands_data[-1]['id'] + 1
+    new_band = BandWithID(id=generated_id, **band_data.model_dump())
+    bands_data.append(new_band.model_dump())
+
     return new_band
 ```
 
 **Step 5: Test the POST Endpoint with REST Client**
-Create a file named `api.http` (or any name with the `.http` extension) and define a POST request to test the new endpoint.
+Create a file named `api.http` (or any name with the `.http` extension) and define a POST request to test the new endpoint. Also can use `curl` or the Swagger documentation to test your endpoints.
 
-```http
-POST http://localhost:8000/bands
-Content-Type: application/json
-
-{
+```shell
+curl -X 'POST' -i \
+  'http://127.0.0.1:8000/bands' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
   "name": "Boards of Canada",
   "genre": "electronic",
   "albums": [
-    {"name": "Tomorrow's Harvest"},
-    {"name": "Music Has the Right to Children"}
+    {"title": "Tomorrows Harvest", "release_date": "1999-01-12"}
   ]
-}
+}'
 ```
-
-Click the "Send Request" button above the request definition after ensuring your FastAPI application is running (e.g., using `uvicorn main:app --reload`). You should see a response containing the newly created band with an auto-generated ID.
 
 **Step 6: Observe API Documentation**
 Navigate to `/docs` on your FastAPI application URL (e.g., `http://localhost:8000/docs`) to see the automatically generated API documentation. The POST `/bands` endpoint will now be documented, showing the expected request body schema based on the `BandCreate` model and the response schema based on the `BandWithID` model.

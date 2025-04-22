@@ -31,6 +31,15 @@ async def get_bands(
     return bands_list
 
 
+@app.post('/bands', response_model=BandWithID)
+async def create_band(band_data: BandCreate):
+    generated_id = bands_data[-1]['id'] + 1
+    new_band = BandWithID(id=generated_id, **band_data.model_dump())
+    bands_data.append(new_band.model_dump())
+
+    return new_band
+
+
 @app.get('/bands/{band_id}', response_model=BandWithID, status_code=200)
 async def get_band(band_id: int) -> BandWithID:
     band = next(
