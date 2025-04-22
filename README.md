@@ -3,12 +3,17 @@
 ## Table of Contents
 
 1. [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md)
+2. [FastAPI #2 - Path Parameters / Data Validation with Type-Hints & Enums](./notes/lesson-02.md)
 
 ## Summary
 
 1. [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md) | [Tutorial](https://youtu.be/Lw-zLopB3o0?si=jyZFx4LbnJOiaryP)
 
    This lesson provides an introduction to the **FastAPI framework** in Python, highlighting its key features and demonstrating how to set up a basic API with route definitions and automatic documentation. It compares FastAPI with older frameworks like Django and Flask, emphasizing its modern features and performance.
+
+2. [FastAPI #2 - Path Parameters / Data Validation with Type-Hints & Enums](./notes/lesson-02.md) | [Tutorial](https://youtu.be/q6E3xoKIBnY?si=n9GqqFDWLTtdnh37)
+
+   This lesson explores how to define and use path parameters in FastAPI to create dynamic API endpoints. It also demonstrates how Python type hints can be used for automatic data validation of these path parameters and how Python enums can restrict the acceptable values for enhanced validation.
 
 ## Credits
 
