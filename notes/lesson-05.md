@@ -153,7 +153,24 @@ curl -X 'POST' -i \
 Navigate to `/docs` on your FastAPI application URL (e.g., `http://localhost:8000/docs`) to see the automatically generated API documentation. The POST `/bands` endpoint will now be documented, showing the expected request body schema based on the `BandCreate` model and the response schema based on the `BandWithID` model.
 
 **Step 7: Define an Enum for Genre Choices**
-In `schemas.py`, create a `GenreChoices` enum to limit the possible values for the `genre` field. This was already included in the `schemas.py` code block in Step 1.
+In `schemas.py`, create a `GenreChoices` enum to limit the possible values for the `genre` field.
+
+```py
+# schemas.py
+
+class GenreChoices(Enum):
+    rock = 'Rock'
+    electronic = 'Electronic'
+    metal = 'Metal'
+    hip_hop = 'Hip-Hop'
+
+class BandBase(BaseModel):
+    name: str
+    genre: GenreChoices
+    albums: list[Album] = []
+```
+
+A consideration with this change is the way to access this field now. For example: `band.genre.value` (use `value` to access the string value).
 
 **Step 8: Implement a Pre-Validator for Genre**
 In the `BandCreate` model within `schemas.py`, add a `@validator` with `pre=True` to convert the input `genre` to title case before validation. This was also included in the `schemas.py` code block in Step 1. This ensures that even if the client sends the genre in lowercase or uppercase, it will be converted to title case before being validated against the `GenreChoices` enum.

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 
-from schemas import GenreURLChoices, BandBase, BandCreate, BandWithID
+from schemas import GenreURLChoices, BandCreate, BandWithID
 
 
 bands_data = [
@@ -23,7 +23,7 @@ async def get_bands(
 
     if genre:
         bands_list = [
-            band for band in bands_list if band.genre.lower() == genre.value]
+            band for band in bands_list if band.genre.value.lower() == genre.value]
 
     if has_albums:
         bands_list = [band for band in bands_list if len(band.albums) > 0]
