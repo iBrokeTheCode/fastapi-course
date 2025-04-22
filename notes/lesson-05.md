@@ -4,8 +4,8 @@
 
 - **Handling Request Bodies in POST Requests:** FastAPI allows you to easily handle data sent by clients in the body of POST requests, which is a common way to create new resources on the server. This data can be in formats like JSON or form data.
 - **Pydantic Models for Request Body Declaration:** To define the structure and expected data types of the request body, FastAPI utilizes Pydantic models. By declaring a parameter in your endpoint function with a Pydantic model as its type hint, FastAPI automatically handles the parsing and validation of the incoming data.
-- **Distinction Between Request and Response Bodies:** The video clarifies the difference between the **request body**, which is the data sent from the client to the FastAPI server, and the **response body**, which is the data sent back from the server to the client after processing the request.
-- **Refactoring Pydantic Models:** For better code organization and flexibility, the video demonstrates refactoring a single Pydantic model into three:
+- **Distinction Between Request and Response Bodies:** The **request body** is the data sent from the client to the FastAPI server, and the **response body** is the data sent back from the server to the client after processing the request.
+- **Refactoring Pydantic Models:** For better code organization and flexibility, we refactored a single Pydantic model into three:
   - **`BandBase`:** This base model contains common fields shared across different representations of a band (e.g., `name`, `genre`, `albums`). It acts like an abstract class holding shared properties.
   - **`BandCreate`:** This model inherits from `BandBase` and defines the fields expected when a new band is created via a POST request. It typically excludes fields that are auto-generated on the server, such as an ID.
   - **`BandWithID`:** This model also inherits from `BandBase` but includes additional fields like the `id`, which would be present when representing an existing band.
@@ -31,28 +31,29 @@ Create `schemas.py` and define `BandBase`, `BandCreate`, and `BandWithID` Pydant
 
 ```python
 # schemas.py
-from pydantic import BaseModel, validator
-from typing import List, Optional
 from enum import Enum
+from datetime import date
+from typing import Optional
 
-class GenreChoices(str, Enum):
-    MUSIC = "Music"
-    ELECTRONIC = "Electronic"
-    HIP_HOP = "Hip-Hop"
-    ROCK = "Rock"
+from pydantic import BaseModel
+
+class GenreURLChoices(Enum):
+    rock = 'rock'
+    electronic = 'electronic'
+    metal = 'metal'
+    hip_hop = 'hip-hop'
 
 class Album(BaseModel):
-    name: str
+    title: str
+    release_date: date
 
 class BandBase(BaseModel):
     name: str
-    genre: GenreChoices
-    albums: Optional[List[Album]] = []
+    genre: str
+    albums: Optional[list[Album]] = []
 
 class BandCreate(BandBase):
-    @validator("genre", pre=True)
-    def title_case_genre(cls, value):
-        return value.title()
+    pass
 
 class BandWithID(BandBase):
     id: int
@@ -63,18 +64,19 @@ Modify the import statement in your `main.py` file to include the new schema cla
 
 ```python
 # main.py
-from fastapi import FastAPI
-from typing import List, Optional
-from schemas import Album, BandBase, BandCreate, BandWithID, GenreChoices
+from fastapi import FastAPI, HTTPException
+
+from schemas import GenreURLChoices, BandBase, BandCreate, BandWithID
+
+bands_data = [
+    {"id": 1, "name": "The Kinks", "genre": "Rock"},
+    {"id": 2, "name": "FX Twin", "genre": "Electronic"},
+    {"id": 3, "name": "Black Sabbath", "genre": "Metal", "albums": [
+        {"title": "Master of Reality", "release_date": "1971-07-21"}]},
+    {"id": 4, "name": "Run-DMC", "genre": "Hip-Hop"},
+]
 
 app = FastAPI()
-
-bands = [
-    {"id": 1, "name": "Nirvana", "genre": "Rock", "albums": []},
-    {"id": 2, "name": "Daft Punk", "genre": "Electronic", "albums": []},
-    {"id": 3, "name": "Run DMC", "genre": "Hip-Hop", "albums": []},
-    {"id": 4, "name": "Aphex Twin", "genre": "Electronic", "albums": []},
-]
 
 # ... (existing GET endpoints)
 ```
@@ -84,19 +86,37 @@ Modify your existing GET endpoints to use `BandWithID` as the `response_model`.
 
 ```python
 # main.py
-@app.get("/bands", response_model=List[BandWithID])
-async def get_bands(genre: Optional[GenreChoices] = None):
-    if genre:
-        return [BandWithID(**band) for band in bands if band["genre"] == genre]
-    return [BandWithID(**band) for band in bands]
+@app.get('/bands', response_model=list[BandWithID])
+async def get_bands(
+    genre: GenreURLChoices | None = None,
+    has_albums: bool = False
+) -> list[BandWithID]:
+    bands_list = [BandWithID(**band) for band in bands_data]
 
-@app.get("/bands/{band_id}", response_model=BandWithID)
-async def get_band(band_id: int):
-    for band in bands:
-        if band["id"] == band_id:
-            return BandWithID(**band)
-    return {"error": "Band not found"}
+    if genre:
+        bands_list = [
+            band for band in bands_list if band.genre.lower() == genre.value]
+
+    if has_albums:
+        bands_list = [band for band in bands_list if len(band.albums) > 0]
+
+    return bands_list
+
+
+@app.get('/bands/{band_id}', response_model=BandWithID, status_code=200)
+async def get_band(band_id: int) -> BandWithID:
+    band = next(
+        (BandWithID(**band) for band in bands_data if band['id'] == band_id),
+        None
+    )
+
+    if band is None:
+        raise HTTPException(status_code=404, detail='Band not found')
+
+    return band
 ```
+
+---
 
 **Step 4: Create a POST Endpoint**
 Define a new POST endpoint at `/bands` that accepts `BandCreate` as the request body and returns `BandWithID`.

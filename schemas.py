@@ -16,8 +16,18 @@ class Album(BaseModel):
     release_date: date
 
 
-class Band(BaseModel):
-    id: int
+class BandBase(BaseModel):
     name: str
     genre: str
     albums: list[Album] = []
+
+
+class BandCreate(BandBase):
+    pass
+    # @validator("genre", pre=True)
+    # def title_case_genre(cls, value):
+    #     return value.title()
+
+
+class BandWithID(BandBase):
+    id: int
