@@ -43,7 +43,9 @@
 
     bands_data = [
         {"id": 1, "name": "The Kinks", "genre": "Rock"},
-        {"id": 2, "name": "FX Twin", "genre": "Electronic"}
+        {"id": 2, "name": "FX Twin", "genre": "Electronic"},
+        {"id": 3, "name": "Black Sabbath", "genre": "Metal"},
+        {"id": 4, "name": "Run-DMC", "genre": "Hip-Hop"},
     ]
 
     @app.get("/bands")
@@ -80,7 +82,9 @@
 
     bands_data = [
         {"id": 1, "name": "The Kinks", "genre": "Rock"},
-        {"id": 2, "name": "FX Twin", "genre": "Electronic"}
+        {"id": 2, "name": "FX Twin", "genre": "Electronic"},
+        {"id": 3, "name": "Black Sabbath", "genre": "Metal"},
+        {"id": 4, "name": "Run-DMC", "genre": "Hip-Hop"},
     ]
 
     @app.get("/bands/{band_id}")
