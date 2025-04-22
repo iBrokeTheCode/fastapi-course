@@ -97,8 +97,6 @@ async def get_band(band_id: Annotated[int, Path(title='The band ID')]) -> BandWi
 
 Here, the path parameter `band_id` is annotated with `Annotated[int, Path(title="The band ID")]`. The `Path` object allows adding metadata like `title`, which will be reflected in the API documentation.
 
----
-
 **Step 5: Importing functions for inspecting `Annotated` types for custom validation.**
 
 ```python
@@ -113,22 +111,26 @@ The lesson demonstrates how to retrieve the type hints with extras, check if a p
 ```python
 from typing import get_type_hints, get_origin, get_args, Annotated
 
+
 def double(x: Annotated[int, (0, 100)]) -> int:
-    hints = get_type_hints(double, include_extras=True)
-    x_hint = hints.get('x')
+    type_hints = get_type_hints(double, include_extras=True)
+    x_hint = type_hints.get('x')
+
     if get_origin(x_hint) is Annotated:
-        type_arg, metadata = get_args(x_hint)
-        if isinstance(metadata, tuple) and len(metadata) == 2:
-            low, high = metadata
-            if not (low <= x <= high):
-                raise ValueError(f"x falls outside of the boundary between {low} and {high}")
+        hint_type, *hint_args = get_args(x_hint)
+        low, high = hint_args[0]
+        if not (low <= x <= high):
+            raise ValueError(
+                f"x falls outside of the boundary between {low} and {high}")
     return x * 2
 
+
 try:
-    result = double(150)
+    result = double(100)
     print(result)
 except ValueError as e:
     print(e)
+
 ```
 
 **Step 7: Creating a decorator to encapsulate custom validation logic.**
