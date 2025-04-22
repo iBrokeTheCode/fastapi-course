@@ -56,36 +56,25 @@
 7.  **Add multiple query parameters by defining additional parameters in the function signature with their respective types and optional default values.** For example, to filter bands by genre and whether they have albums:
 
     ```python
-    from typing import List, Optional
-    from enum import Enum
     from fastapi import FastAPI
-    from pydantic import BaseModel
 
     app = FastAPI()
 
-    class GenreURLChoices(str, Enum):
-        rock = "rock"
-        electronic = "electronic"
+    @app.get('/bands', response_model=list[Band])
+    async def get_bands(
+        genre: GenreURLChoices | None = None,
+        has_albums: bool = False
+    ) -> list[Band]:
+        bands_list = [Band(**band) for band in bands_data]
 
-    class Band(BaseModel):
-        name: str
-        genre: GenreURLChoices
-        albums: List[str] = []
-
-    bands = [
-        {"name": "The Kinks", "genre": "rock", "albums": []},
-        {"name": "New Order", "genre": "electronic", "albums": ["Power, Corruption & Lies"]},
-        {"name": "The Cure", "genre": "rock", "albums": ["Disintegration"]},
-    ]
-
-    @app.get("/bands")
-    async def list_bands(genre: Optional[GenreURLChoices] = None, has_albums: bool = False):
-        band_list = [Band(**band) for band in bands]
         if genre:
-            band_list = [band for band in band_list if band.genre == genre]
+            bands_list = [
+                band for band in bands_list if band.genre.lower() == genre.value]
+
         if has_albums:
-            band_list = [band for band in band_list if len(band.albums) > 0]
-        return band_list
+            bands_list = [band for band in bands_list if len(band.albums) > 0]
+
+        return bands_list
     ```
 
     Here, `has_albums` is another query parameter of type `bool` with a default value of `False`. The filtering logic is then extended to consider this parameter as well. Requests like `/bands?genre=electronic&has_albums=true` would filter for electronic bands that have albums. This demonstrates an "and" condition as both criteria must be met after each filtering step.
