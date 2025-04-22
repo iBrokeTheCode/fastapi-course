@@ -92,7 +92,6 @@ The lesson also explains **nested Pydantic models**, which allow for representin
 
     ```python
     from datetime import date
-    from typing import List
     from pydantic import BaseModel
 
     class Album(BaseModel):
@@ -109,7 +108,7 @@ The lesson also explains **nested Pydantic models**, which allow for representin
 8.  **Update the data to include nested structures:** Modify the data that your FastAPI application returns to match the structure defined by your nested Pydantic models.
 
     ```python
-    bands_data_with_albums = [
+    bands_data = [
         {
             "id": 1,
             "name": "Black Sabbath",
@@ -124,14 +123,7 @@ The lesson also explains **nested Pydantic models**, which allow for representin
         }
     ]
 
-    @app.get("/bands", response_model=List[Band])
-    async def read_bands_with_albums():
-        return [Band(**band) for band in bands_data_with_albums]
-
-    @app.get("/bands/{band_id}", response_model=Band)
-    async def read_band_with_albums(band_id: int):
-        band = next((band for band in bands_data_with_albums if band["id"] == band_id), None)
-        return Band(**band) if band else None
+    # ...
     ```
 
     **Explanation:** The `bands_data_with_albums` now includes an "albums" key for each band, containing a list of dictionaries that conform to the structure defined in the `Album` Pydantic model. When the FastAPI endpoint returns this data with the `response_model` set to `Band`, Pydantic will automatically validate and serialize the nested album data as well. If the data within the "albums" list does not match the `Album` model's definition (e.g., incorrect field names or data types), a validation error will occur.
