@@ -42,7 +42,6 @@ The lesson also explains **nested Pydantic models**, which allow for representin
 5.  **Use the Pydantic model as a return type hint in FastAPI endpoints:** In your FastAPI route functions, specify the Pydantic model (or a list of models using `typing.List`) as the `response_model`. FastAPI will then automatically try to serialize the returned data into this model and validate it.
 
     ```python
-    from typing import List
     from fastapi import FastAPI
 
     app = FastAPI()
@@ -51,14 +50,22 @@ The lesson also explains **nested Pydantic models**, which allow for representin
         {"id": 2, "name": "Led Zeppelin", "genre": "Hard Rock"}
     ]
 
-    @app.get("/bands", response_model=List[Band])
-    async def read_bands():
+    @app.get('/bands', response_model=list[Band])
+    async def get_bands() -> list[Band]:
         return [Band(**band) for band in bands_data]
 
-    @app.get("/bands/{band_id}", response_model=Band)
-    async def read_band(band_id: int):
-        band = next((band for band in bands_data if band["id"] == band_id), None)
-        return Band(**band) if band else None
+
+    @app.get('/bands/{band_id}', response_model=Band)
+    async def get_band(band_id: int) -> Band:
+        band = next(
+            (Band(**band) for band in bands_data if band['id'] == band_id),
+            None
+        )
+
+        if band is None:
+            raise HTTPException(status_code=404, detail='Band not found')
+
+        return band
     ```
 
     **Explanation:** The `response_model=List[Band]` in the `/bands` endpoint tells FastAPI that this endpoint should return a list of `Band` objects. Similarly, `response_model=Band` in the `/bands/{band_id}` endpoint indicates that a single `Band` object should be returned. The `Band(**band)` syntax unpacks the dictionary `band` and passes its key-value pairs as arguments to the `Band` model's constructor, creating an instance of the `Band` Pydantic model.
