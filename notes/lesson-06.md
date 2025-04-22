@@ -54,13 +54,22 @@ from fastapi import FastAPI, Query
 
 app = FastAPI()
 
-@app.get("/bands/")
-async def get_bands(q: Annotated[Union[str, None], Query(max_length=10)] = None):
-    bands = [{"name": "Black Sabbath"}, {"name": "Wu-Tang Clan"}, {"name": "The Beatles"}]
+@app.get('/bands', response_model=list[BandWithID])
+async def get_bands(
+    genre: GenreURLChoices | None = None,
+    q: Annotated[str | None, Query(max_length=10)] = None
+) -> list[BandWithID]:
+    bands_list = [BandWithID(**band) for band in bands_data]
+
+    if genre:
+        bands_list = [
+            band for band in bands_list if band.genre.value.lower() == genre.value]
+
     if q:
-        results = [band for band in bands if q.lower() in band["name"].lower()]
-        return results
-    return bands
+        bands_list = [band for band in bands_list if q.lower()
+                      in band.name.lower()]
+
+    return bands_list
 ```
 
 In this FastAPI endpoint, the query parameter `q` is annotated with `Annotated[Union[str, None], Query(max_length=10)]`. This tells FastAPI that `q` can be either a string or `None`, and if it's a string, its maximum length should be 10 characters. FastAPI automatically handles the validation based on the `Query` metadata.
@@ -73,12 +82,22 @@ from fastapi import FastAPI, Path
 
 app = FastAPI()
 
-@app.get("/bands/{band_id}")
-async def get_band(band_id: Annotated[int, Path(title="The ID of the band to get")]):
-    return {"band_id": band_id}
+@app.get('/bands/{band_id}', response_model=BandWithID, status_code=200)
+async def get_band(band_id: Annotated[int, Path(title='The band ID')]) -> BandWithID:
+    band = next(
+        (BandWithID(**band) for band in bands_data if band['id'] == band_id),
+        None
+    )
+
+    if band is None:
+        raise HTTPException(status_code=404, detail='Band not found')
+
+    return band
 ```
 
-Here, the path parameter `band_id` is annotated with `Annotated[int, Path(title="The ID of the band to get")]`. The `Path` object allows adding metadata like `title`, which will be reflected in the API documentation.
+Here, the path parameter `band_id` is annotated with `Annotated[int, Path(title="The band ID")]`. The `Path` object allows adding metadata like `title`, which will be reflected in the API documentation.
+
+---
 
 **Step 5: Importing functions for inspecting `Annotated` types for custom validation.**
 
