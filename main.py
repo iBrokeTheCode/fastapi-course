@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 
-from schemas import GenreURLChoices, Band
+from schemas import GenreURLChoices, BandCreate, BandWithID
 
 
 bands_data = [
@@ -14,16 +14,16 @@ bands_data = [
 app = FastAPI()
 
 
-@app.get('/bands', response_model=list[Band])
+@app.get('/bands', response_model=list[BandWithID])
 async def get_bands(
     genre: GenreURLChoices | None = None,
     has_albums: bool = False
-) -> list[Band]:
-    bands_list = [Band(**band) for band in bands_data]
+) -> list[BandWithID]:
+    bands_list = [BandWithID(**band) for band in bands_data]
 
     if genre:
         bands_list = [
-            band for band in bands_list if band.genre.lower() == genre.value]
+            band for band in bands_list if band.genre.value.lower() == genre.value]
 
     if has_albums:
         bands_list = [band for band in bands_list if len(band.albums) > 0]
@@ -31,10 +31,19 @@ async def get_bands(
     return bands_list
 
 
-@app.get('/bands/{band_id}', response_model=Band, status_code=200)
-async def get_band(band_id: int) -> Band:
+@app.post('/bands', response_model=BandWithID)
+async def create_band(band_data: BandCreate):
+    generated_id = bands_data[-1]['id'] + 1
+    new_band = BandWithID(id=generated_id, **band_data.model_dump())
+    bands_data.append(new_band.model_dump())
+
+    return new_band
+
+
+@app.get('/bands/{band_id}', response_model=BandWithID, status_code=200)
+async def get_band(band_id: int) -> BandWithID:
     band = next(
-        (Band(**band) for band in bands_data if band['id'] == band_id),
+        (BandWithID(**band) for band in bands_data if band['id'] == band_id),
         None
     )
 

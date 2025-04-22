@@ -6,6 +6,7 @@
 2. [FastAPI #2 - Path Parameters / Data Validation with Type-Hints & Enums](./notes/lesson-02.md)
 3. [FastAPI and Pydantic - Model Classes and Nested Models](./notes/lesson-03.md)
 4. [FastAPI and Pydantic - URL Query Parameters for Filtering](./notes/lesson-04.md)
+5. [FastAPI - Request Body and POST requests | Pydantic pre-validators](./notes/lesson-05.md)
 
 ## Summary
 
@@ -24,6 +25,10 @@
 4. [FastAPI and Pydantic - URL Query Parameters for Filtering](./notes/lesson-04.md) | [Tutorial](https://youtu.be/Dnp07ZKfdVU?si=WftqGWLMTRM-OK0y)
 
    In this lesson, we explore how to add and utilize query parameters in FastAPI to filter data in our API endpoints.
+
+5. [FastAPI - Request Body and POST requests | Pydantic pre-validators](./notes/lesson-05.md) | [Tutorial](https://youtu.be/zq0_g3BKltE?si=hU2LNYfvifFxe0mb)
+
+   This lesson provides a practical guide on building FastAPI endpoints that can receive data from clients via POST requests. It highlights the use of Pydantic models to define the expected structure and types of the request body, ensuring data validation and seamless integration within the FastAPI application.
 
 ## Credits
 
