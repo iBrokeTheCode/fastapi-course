@@ -173,4 +173,14 @@ class BandBase(BaseModel):
 A consideration with this change is the way to access this field now. For example: `band.genre.value` (use `value` to access the string value).
 
 **Step 8: Implement a Pre-Validator for Genre**
-In the `BandCreate` model within `schemas.py`, add a `@validator` with `pre=True` to convert the input `genre` to title case before validation. This was also included in the `schemas.py` code block in Step 1. This ensures that even if the client sends the genre in lowercase or uppercase, it will be converted to title case before being validated against the `GenreChoices` enum.
+In the `BandCreate` model within `schemas.py`, add a `@field_validator` with `mode='before'` to convert the input `genre` to title case before validation (@validator, pre=True is deprecated). This ensures that even if the client sends the genre in lowercase or uppercase, it will be converted to title case before being validated against the `GenreChoices` enum.
+
+```py
+# schemas.py
+from pydantic import BaseModel, field_validator
+
+class BandCreate(BandBase):
+    @field_validator('genre', mode='before')
+    def title_case_genre(cls, value):
+        return value.title()
+```
