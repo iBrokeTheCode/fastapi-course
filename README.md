@@ -7,6 +7,7 @@
 3. [FastAPI and Pydantic - Model Classes and Nested Models](./notes/lesson-03.md)
 4. [FastAPI and Pydantic - URL Query Parameters for Filtering](./notes/lesson-04.md)
 5. [FastAPI - Request Body and POST requests | Pydantic pre-validators](./notes/lesson-05.md)
+6. [Python & FastAPI - Annotated Type for Data Validation + Metadata!](./notes/lesson-06.md)
 
 ## Summary
 
@@ -29,6 +30,10 @@
 5. [FastAPI - Request Body and POST requests | Pydantic pre-validators](./notes/lesson-05.md) | [Tutorial](https://youtu.be/zq0_g3BKltE?si=hU2LNYfvifFxe0mb)
 
    This lesson provides a practical guide on building FastAPI endpoints that can receive data from clients via POST requests. It highlights the use of Pydantic models to define the expected structure and types of the request body, ensuring data validation and seamless integration within the FastAPI application.
+
+6. [Python & FastAPI - Annotated Type for Data Validation + Metadata!](./notes/lesson-06.md) | [Tutorial](https://youtu.be/9Hc-mql6Gv4?si=ap11Njh3XzD7PoY3)
+
+   This lesson provides an in-depth exploration of how to use Python's **`Annotated` type**, introduced in Python 3.5, within the **FastAPI** framework. It demonstrates how `Annotated` allows developers to add **metadata and validation constraints** to parameters in FastAPI handler functions. The lesson covers basic usage, integration with FastAPI's built-in validation mechanisms for query and path parameters, and also delves into how to create custom validation logic by inspecting `Annotated` types.
 
 ## Credits
 
