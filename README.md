@@ -9,6 +9,12 @@
 5. [FastAPI - Request Body and POST requests | Pydantic pre-validators](./notes/lesson-05.md)
 6. [Python & FastAPI - Annotated Type for Data Validation + Metadata!](./notes/lesson-06.md)
 
+**Pending**
+
+- [FastAPI & SQLModel - Database Interaction in FastAPI apps with SQLModel](https://youtu.be/pRYzMF04fLw?si=mDx38PWD4YztVGAE)
+- [FastAPI & Alembic - Database Migrations in FastAPI apps](https://youtu.be/zTSmvUVbk8M?si=n2adErX501cP1fIy)
+- [Zod, React, FastAPI & Pydantic - Data Validation on Client and Server](https://youtu.be/iYUaK1KOz54?si=GwIPPX2t2s2ru5zJ)
+
 ## Summary
 
 1. [FastAPI #1 Installation / API Routes / Swagger Docs](./notes/lesson-01.md) | [Tutorial](https://youtu.be/Lw-zLopB3o0?si=jyZFx4LbnJOiaryP)
