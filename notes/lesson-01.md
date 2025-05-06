@@ -65,7 +65,7 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Open your terminal or command prompt.
     - Run the command: `fastapi dev main.py`.
-    - FastAPI will scan for the `app` instance in `main.py` and start the server, typically on `Local Host 8000` or `127.0.0.1:8000`.
+    - FastAPI will scan for the `app` instance in `main.py` and start the server, typically on `Localhost 8000` or `127.0.0.1:8000`.
 
     ```bash
     fastapi dev main.py
@@ -88,6 +88,8 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     ```
 
     - Access this endpoint via a URL like `http://localhost:8000/greet/Jonathan`.
+
+---
 
 5.  **Define an endpoint with a Query Parameter:**
 
