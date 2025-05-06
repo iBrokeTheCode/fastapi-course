@@ -138,15 +138,12 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Now, requests to `/greet` will return "Hello user, your age is 0". Requests like `/greet?name=Trevor` will return "Hello Trevor, your age is 0". Requests like `/greet?name=Jonah&age=23` will return "Hello Jonah, your age is 23".
 
----
-
 8.  **Define a POST endpoint with a Request Body:**
 
     - Import `BaseModel` from `pydantic`: `from pydantic import BaseModel`.
     - Define a Pydantic model class that inherits from `BaseModel`. Define the required fields and their types.
 
     ```python
-    # main.py (add to existing imports and code)
     from fastapi import FastAPI, Header # Add Header later
     from typing import Optional
     from pydantic import BaseModel # Import BaseModel
@@ -164,7 +161,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     - Access the data from the request body using dot notation, e.g., `book_data.title`, `book_data.author`.
 
     ```python
-    # main.py (add to existing code)
     @app.post("/create-book")
     async def create_book(book_data: BookCreateModel):
         # In a real app, you would save book_data to a database
@@ -174,14 +170,20 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
         }
     ```
 
-    - To test this, use an HTTP client (like **Rest Fox** mentioned in source). Set the request type to **POST**, the URL to `http://localhost:8000/create-book`, and provide a **JSON request body** matching the `BookCreateModel` structure. If the JSON is missing or incorrect, FastAPI/Pydantic will return validation errors.
+    - To test this, use an HTTP client (like **Rest Fox** mentioned in source) or use the tool from docs in `http://127.0.0.1:8000/docs`. Set the request type to **POST**, the URL to `http://localhost:8000/create-book`, and provide a **JSON request body** matching the `BookCreateModel` structure. If the JSON is missing or incorrect, FastAPI/Pydantic will return validation errors. It also provide the code to use with `curl`.
 
-    ```json
-    {
-      "title": "Learn FastAPI",
-      "author": "Ssali Jonathan"
-    }
+    ```shell
+    curl -X 'POST' \
+    'http://127.0.0.1:8000/create-book' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "title": "string",
+    "author": "string"
+    }'
     ```
+
+---
 
 9.  **Access Request Headers:**
 

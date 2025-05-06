@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -32,3 +33,14 @@ async def full_greet(name: str, age: int) -> dict:
 @app.get("/greet-optional")
 async def greet_optional(name: Optional[str] = "N/A", age: int = 0) -> dict:
     return {"message": f"Hello {name}", "age": age}
+
+
+# Model
+class BookCreateModel(BaseModel):
+    title: str
+    author: str
+
+
+@app.post("/create-book")
+def create_book(book_data: BookCreateModel) -> dict:
+    return {"title": book_data.title, "author": book_data.author}
