@@ -89,8 +89,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Access this endpoint via a URL like `http://localhost:8000/greet/Jonathan`.
 
----
-
 5.  **Define an endpoint with a Query Parameter:**
 
     - Define an endpoint without path parameters, e.g., `@app.get("/greet_query")` (using a different path to avoid conflict, or remove the path parameter from the previous example as shown in source). Let's use the path `/greet` as in source.
@@ -101,13 +99,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     ```python
     # main.py (modify the /greet endpoint)
     from fastapi import FastAPI
-    # from typing import Optional # Needed later for optional
-
-    app = FastAPI()
-
-    @app.get("/")
-    async def read_root():
-        return {"message": "Hello World"}
 
     # Modified greet endpoint to use query parameter 'name'
     @app.get("/greet")
@@ -117,7 +108,17 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Access this endpoint via a URL like `http://localhost:8000/greet?name=Jonathan`.
 
-6.  **Make a Query Parameter Optional with a Default Value:**
+6.  **Mix Path and Query Parameters:**
+
+    ```python
+    @app.get("/greet/{name}")
+    async def greet_with_age(name: str, age: int): # name is path param, age is mandatory query param
+        return {"message": f"Hello {name}, your age is {age}"}
+    ```
+
+    Access this endpoint via a URL like `http://localhost:8000/greet/Trevor?age=23`. Without the `age` query parameter, it would result in an Unprocessable Entity error.
+
+7.  **Make a Query Parameter Optional with a Default Value:**
 
     - Import the `Optional` class: `from typing import Optional`.
     - In the function signature, use `Optional[DataType]` for the parameter and assign a default value using `=`.
@@ -129,10 +130,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     app = FastAPI()
 
-    @app.get("/")
-    async def read_root():
-        return {"message": "Hello World"}
-
     # Greet endpoint with optional query parameter 'name' and default value 'user'
     @app.get("/greet")
     async def greet_user(name: Optional[str] = "user", age: Optional[int] = 0): # Added age and made both optional with defaults
@@ -141,21 +138,7 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Now, requests to `/greet` will return "Hello user, your age is 0". Requests like `/greet?name=Trevor` will return "Hello Trevor, your age is 0". Requests like `/greet?name=Jonah&age=23` will return "Hello Jonah, your age is 23".
 
-7.  **Mix Path and Query Parameters:**
-
-    - Define an endpoint path with a parameter, e.g., `@app.get("/items/{item_id}")`.
-    - Define the function to accept the path parameter (e.g., `item_id: int`) and additional parameters that will be treated as query parameters (e.g., `q: Optional[str] = None`).
-
-    ```python
-    # main.py (Example from common FastAPI patterns, conceptually similar to source)
-    # Source shows mixing path param 'name' and query param 'age' on the /greet path
-    # Let's replicate the /greet example from source directly.
-    @app.get("/greet/{name}")
-    async def greet_with_age(name: str, age: int): # name is path param, age is mandatory query param
-        return {"message": f"Hello {name}, your age is {age}"}
-    ```
-
-    - Access this endpoint via a URL like `http://localhost:8000/greet/Trevor?age=23`. Without the `age` query parameter, it would result in an Unprocessable Entity error.
+---
 
 8.  **Define a POST endpoint with a Request Body:**
 
