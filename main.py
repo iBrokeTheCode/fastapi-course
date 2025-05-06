@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -41,6 +41,23 @@ class BookCreateModel(BaseModel):
     author: str
 
 
-@app.post("/create-book")
-def create_book(book_data: BookCreateModel) -> dict:
+# Create book
+@app.post("/create-book", status_code=201)
+async def create_book(book_data: BookCreateModel) -> dict:
     return {"title": book_data.title, "author": book_data.author}
+
+
+# Getting Headers Values
+@app.get("/get-headers")
+async def get_headers(
+    accept: Optional[str] = Header(None),
+    content_type: Optional[str] = Header(None),
+    user_agent: Optional[str] = Header(None),
+    host: Optional[str] = Header(None),
+):
+    return {
+        "Accept": accept,
+        "Content-Type": content_type,
+        "User-Agent": user_agent,
+        "Host": host,
+    }

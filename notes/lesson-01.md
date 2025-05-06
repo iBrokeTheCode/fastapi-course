@@ -183,8 +183,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     }'
     ```
 
----
-
 9.  **Access Request Headers:**
 
     - Import the `Header` function: `from fastapi import Header`.
