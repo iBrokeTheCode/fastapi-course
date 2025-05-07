@@ -55,7 +55,7 @@ This tutorial focuses on restructuring a FastAPI project to make it more modular
 5.  **Implement FastAPI Router**:
 
     - In `src/books/routes.py`, import `APIRouter` from `fastapi`.
-    - Create an instance of `APIRouter`. The transcript names it `book_router`:
+    - Create an instance of `APIRouter`. The tutorial names it `book_router`:
 
       ```python
       from fastapi import APIRouter
@@ -82,8 +82,6 @@ This tutorial focuses on restructuring a FastAPI project to make it more modular
     - In `src/__init__.py`, import the `book_router` from its location within the package structure:
       ```python
       from source.books.routes import book_router
-      # The transcript implies 'source' is the name of the src directory in the import path
-      # depending on how the project is run, this might be 'src.books.routes'
       ```
     - Include the `book_router` in the main `app` instance using `app.include_router()`:
       ```python
@@ -138,7 +136,7 @@ This tutorial focuses on restructuring a FastAPI project to make it more modular
     - Run the FastAPI development server, pointing to the main app instance within the `src` package:
       ```bash
       fastapi dev src.__init__:app
-      # Or as shown in transcript:
+      # Or as shown in tutorial:
       # fastapi dev src
       ```
     - FastAPI will now use the `src` directory as the entry point and find the app instance in `src/__init__.py`.
