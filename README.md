@@ -6,6 +6,7 @@
 ## Table of Contents
 
 1. [Web Server Basics (Path & Query Params, Request Body, Headers)](./notes/lesson-01.md)
+2. [Build a CRUD REST API (Response Models, Validation, And Exceptions)](./notes/lesson-02.md)
 
 ## Credits
 
