@@ -4,26 +4,26 @@ from fastapi import FastAPI, status
 from fastapi.exceptions import HTTPException
 
 from db import sample_books
-from schemas import Book, BookUpdate
+from schemas import BookCreate, BookUpdate
 
 app = FastAPI()
 
 
-@app.get("/books", response_model=List[Book])
+@app.get("/books", response_model=List[BookCreate])
 async def get_all_books():
     """Return all books."""
     return sample_books
 
 
-@app.post("/books", response_model=Book, status_code=status.HTTP_201_CREATED)
-async def create_book(book: Book) -> dict:
+@app.post("/books", response_model=BookCreate, status_code=status.HTTP_201_CREATED)
+async def create_book(book: BookCreate) -> dict:
     """Create a book."""
     new_book = book.model_dump()
     sample_books.append(book)
     return new_book
 
 
-@app.get("/book/{book_id}", response_model=Book)
+@app.get("/book/{book_id}", response_model=BookCreate)
 async def get_book(book_id: int) -> dict:
     """Get book by id."""
     for book in sample_books:
@@ -33,7 +33,7 @@ async def get_book(book_id: int) -> dict:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
 
 
-@app.patch("/book/{book_id}", response_model=Book)
+@app.patch("/book/{book_id}", response_model=BookCreate)
 async def update_book(book_id: int, book_data: BookUpdate) -> dict:
     """Update book."""
     for book in sample_books:

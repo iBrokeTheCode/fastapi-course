@@ -1,9 +1,9 @@
 from typing import List
 
-from schemas import Book
+from schemas import BookCreate
 
-sample_books: List[Book] = [
-    Book(
+sample_books: List[BookCreate] = [
+    BookCreate(
         id=1,
         title="The Hitchhiker's Guide to the Galaxy",
         author="Douglas Adams",
@@ -12,7 +12,7 @@ sample_books: List[Book] = [
         page_count=224,
         language="English",
     ),
-    Book(
+    BookCreate(
         id=2,
         title="Pride and Prejudice",
         author="Jane Austen",
@@ -21,7 +21,7 @@ sample_books: List[Book] = [
         page_count=432,
         language="English",
     ),
-    Book(
+    BookCreate(
         id=3,
         title="Cien años de soledad",
         author="Gabriel García Márquez",
@@ -30,7 +30,7 @@ sample_books: List[Book] = [
         page_count=417,
         language="Spanish",
     ),
-    Book(
+    BookCreate(
         id=4,
         title="The Lord of the Rings",
         author="J.R.R. Tolkien",
@@ -39,7 +39,7 @@ sample_books: List[Book] = [
         page_count=1216,
         language="English",
     ),
-    Book(
+    BookCreate(
         id=5,
         title="Le Petit Prince",
         author="Antoine de Saint-Exupéry",
@@ -48,7 +48,7 @@ sample_books: List[Book] = [
         page_count=96,
         language="French",
     ),
-    Book(
+    BookCreate(
         id=6,
         title="Foundation",
         author="Isaac Asimov",
@@ -57,7 +57,7 @@ sample_books: List[Book] = [
         page_count=255,
         language="English",
     ),
-    Book(
+    BookCreate(
         id=7,
         title="La Divina Commedia",
         author="Dante Alighieri",
