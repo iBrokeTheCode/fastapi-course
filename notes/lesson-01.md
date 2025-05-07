@@ -22,6 +22,7 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
 - [Source Tutorial](https://youtu.be/7DQEQPlBNVM?si=9cYpSUZkR-LkRFNt)
 - [FastAPI Installation and First Steps](./bug_bytes/lesson-01.md)
+- [Lesson Source Code](../src/lesson-01/)
 
 ## 3. Practical Steps: Hands-on Guide
 
