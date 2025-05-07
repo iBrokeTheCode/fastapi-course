@@ -65,7 +65,7 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Open your terminal or command prompt.
     - Run the command: `fastapi dev main.py`.
-    - FastAPI will scan for the `app` instance in `main.py` and start the server, typically on `Local Host 8000` or `127.0.0.1:8000`.
+    - FastAPI will scan for the `app` instance in `main.py` and start the server, typically on `Localhost 8000` or `127.0.0.1:8000`.
 
     ```bash
     fastapi dev main.py
@@ -99,13 +99,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     ```python
     # main.py (modify the /greet endpoint)
     from fastapi import FastAPI
-    # from typing import Optional # Needed later for optional
-
-    app = FastAPI()
-
-    @app.get("/")
-    async def read_root():
-        return {"message": "Hello World"}
 
     # Modified greet endpoint to use query parameter 'name'
     @app.get("/greet")
@@ -115,7 +108,17 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Access this endpoint via a URL like `http://localhost:8000/greet?name=Jonathan`.
 
-6.  **Make a Query Parameter Optional with a Default Value:**
+6.  **Mix Path and Query Parameters:**
+
+    ```python
+    @app.get("/greet/{name}")
+    async def greet_with_age(name: str, age: int): # name is path param, age is mandatory query param
+        return {"message": f"Hello {name}, your age is {age}"}
+    ```
+
+    Access this endpoint via a URL like `http://localhost:8000/greet/Trevor?age=23`. Without the `age` query parameter, it would result in an Unprocessable Entity error.
+
+7.  **Make a Query Parameter Optional with a Default Value:**
 
     - Import the `Optional` class: `from typing import Optional`.
     - In the function signature, use `Optional[DataType]` for the parameter and assign a default value using `=`.
@@ -127,10 +130,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     app = FastAPI()
 
-    @app.get("/")
-    async def read_root():
-        return {"message": "Hello World"}
-
     # Greet endpoint with optional query parameter 'name' and default value 'user'
     @app.get("/greet")
     async def greet_user(name: Optional[str] = "user", age: Optional[int] = 0): # Added age and made both optional with defaults
@@ -139,29 +138,12 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
 
     - Now, requests to `/greet` will return "Hello user, your age is 0". Requests like `/greet?name=Trevor` will return "Hello Trevor, your age is 0". Requests like `/greet?name=Jonah&age=23` will return "Hello Jonah, your age is 23".
 
-7.  **Mix Path and Query Parameters:**
-
-    - Define an endpoint path with a parameter, e.g., `@app.get("/items/{item_id}")`.
-    - Define the function to accept the path parameter (e.g., `item_id: int`) and additional parameters that will be treated as query parameters (e.g., `q: Optional[str] = None`).
-
-    ```python
-    # main.py (Example from common FastAPI patterns, conceptually similar to source)
-    # Source shows mixing path param 'name' and query param 'age' on the /greet path
-    # Let's replicate the /greet example from source directly.
-    @app.get("/greet/{name}")
-    async def greet_with_age(name: str, age: int): # name is path param, age is mandatory query param
-        return {"message": f"Hello {name}, your age is {age}"}
-    ```
-
-    - Access this endpoint via a URL like `http://localhost:8000/greet/Trevor?age=23`. Without the `age` query parameter, it would result in an Unprocessable Entity error.
-
 8.  **Define a POST endpoint with a Request Body:**
 
     - Import `BaseModel` from `pydantic`: `from pydantic import BaseModel`.
     - Define a Pydantic model class that inherits from `BaseModel`. Define the required fields and their types.
 
     ```python
-    # main.py (add to existing imports and code)
     from fastapi import FastAPI, Header # Add Header later
     from typing import Optional
     from pydantic import BaseModel # Import BaseModel
@@ -179,7 +161,6 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
     - Access the data from the request body using dot notation, e.g., `book_data.title`, `book_data.author`.
 
     ```python
-    # main.py (add to existing code)
     @app.post("/create-book")
     async def create_book(book_data: BookCreateModel):
         # In a real app, you would save book_data to a database
@@ -189,13 +170,17 @@ This tutorial focuses on creating a simple web server using **FastAPI**. It cove
         }
     ```
 
-    - To test this, use an HTTP client (like **Rest Fox** mentioned in source). Set the request type to **POST**, the URL to `http://localhost:8000/create-book`, and provide a **JSON request body** matching the `BookCreateModel` structure. If the JSON is missing or incorrect, FastAPI/Pydantic will return validation errors.
+    - To test this, use an HTTP client (like **Rest Fox** mentioned in source) or use the tool from docs in `http://127.0.0.1:8000/docs`. Set the request type to **POST**, the URL to `http://localhost:8000/create-book`, and provide a **JSON request body** matching the `BookCreateModel` structure. If the JSON is missing or incorrect, FastAPI/Pydantic will return validation errors. It also provide the code to use with `curl`.
 
-    ```json
-    {
-      "title": "Learn FastAPI",
-      "author": "Ssali Jonathan"
-    }
+    ```shell
+    curl -X 'POST' \
+    'http://127.0.0.1:8000/create-book' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "title": "string",
+    "author": "string"
+    }'
     ```
 
 9.  **Access Request Headers:**
