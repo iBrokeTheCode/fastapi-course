@@ -8,6 +8,7 @@
 1. [Web Server Basics (Path & Query Params, Request Body, Headers)](./notes/lesson-01.md)
 2. [Build a CRUD REST API (Response Models, Validation, And Exceptions)](./notes/lesson-02.md)
 3. [Modular Project Structure With FastAPI Routers](./notes/lesson-03.md)
+4. [Databases With SQLModel (Connection, Lifespan Events, And Models)](./notes/lesson-04.md)
 
 ## Credits
 
