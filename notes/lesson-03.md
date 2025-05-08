@@ -15,6 +15,7 @@ This tutorial focuses on restructuring a FastAPI project to make it more modular
 ## 2. Resources
 
 - [Source Tutorial](https://youtu.be/_kNyYIFSOFU?si=XxqrbnobdraLKLu8)
+- [Lesson Source Code](./src/lesson-03/src/)
 
 ## 3. Practical Steps: Hands-on Guide
 
