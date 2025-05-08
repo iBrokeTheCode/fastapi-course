@@ -24,7 +24,7 @@ This lesson details the process of building a **CRUD REST API** using the **Fast
 ## 2. Resources
 
 - [Source Tutorial](https://youtu.be/W8D-crU5-Fc?si=NdkasvnGXs9A1P0H)
-- [Lesson Source Code](../src/lesson-02/)
+- [Lesson Source Code](./src/lesson-02/)
 
 ## 3. Practical Steps: Hands-on Guide
 
