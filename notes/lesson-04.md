@@ -147,27 +147,28 @@ A value that is automatically assigned to a column if no value is explicitly pro
     - This class will automatically read the `DATABASE_URL` from your `.env` file.
 
 6.  **Add .env to .gitignore:**
-    - To prevent committing your `.env` file (containing sensitive credentials) to version control, add `.env` to your project's `.gitignore` file.
 
----
+    - To prevent committing your `.env` file (containing sensitive credentials) to version control, add `.env` to your project's `.gitignore` file.
 
 7.  **Create Database Engine:**
 
-    - Create a new package (folder) named `db` inside your `source` directory.
+    - Create a new package (folder) named `db` inside your `src` directory.
     - Inside the `db` package, create a file named `main.py`.
-    - In `source/db/main.py`, create your database engine:
+    - In `src/db/main.py`, create your database engine:
 
       ```python
       from sqlmodel import create_engine
       from sqlalchemy.ext.asyncio import AsyncEngine # Although AsyncEngine class is imported, create_engine directly returns async engine with asyncpg URL
 
-      from source.config import config # Import the config object
+      from src.config import config # Import the config object
 
       # Create the async database engine
       engine = create_engine(config.DATABASE_URL, echo=True) # echo=True logs SQL statements
       ```
 
     - (Note: The tutorial code shows importing `AsyncEngine` but uses the `engine` variable directly in subsequent steps, implying `create_engine` with the async URL provides an async engine).
+
+---
 
 8.  **Set up FastAPI Lifespan Event:**
     - Go to your main FastAPI application file (where your `FastAPI` instance is created).
