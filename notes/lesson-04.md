@@ -114,8 +114,6 @@ A value that is automatically assigned to a column if no value is explicitly pro
       ```
       Replace `j35`, `your_password`, `localhost`, `5432`, and `bookly_DB` with your actual details. If using Neon, copy your provided URL.
 
----
-
 4.  **Install Dependencies:**
     - Open your terminal in your project's virtual environment.
     - Install the asynchronous PostgreSQL driver (`asyncpg`) and Pydantic Settings:
@@ -128,7 +126,7 @@ A value that is automatically assigned to a column if no value is explicitly pro
       ```
 5.  **Configure Pydantic Settings:**
 
-    - Create a new Python file `source/config.py`.
+    - Create a new Python file `src/config.py`.
     - Define a class to read your environment variables using Pydantic Settings:
 
       ```python
@@ -150,6 +148,9 @@ A value that is automatically assigned to a column if no value is explicitly pro
 
 6.  **Add .env to .gitignore:**
     - To prevent committing your `.env` file (containing sensitive credentials) to version control, add `.env` to your project's `.gitignore` file.
+
+---
+
 7.  **Create Database Engine:**
 
     - Create a new package (folder) named `db` inside your `source` directory.
