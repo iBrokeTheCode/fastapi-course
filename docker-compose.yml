@@ -1,0 +1,17 @@
+# docker run --name postgres_db -p 5432:5432 -e POSTGRES_USER=fastapi_usr -e POSTGRES_PASSWORD=fastapi_pwd -e POSTGRES_DB=fastapi_db -v db_data:/var/lib/postgresql/data -d postgres:17
+
+services:
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: fastapi_usr
+      POSTGRES_PASSWORD: fastapi_pwd
+      POSTGRES_DB: fastapi_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+volumes:
+  db_data:

@@ -68,7 +68,36 @@ A value that is automatically assigned to a column if no value is explicitly pro
 ## 3. Practical Steps: Hands-on Guide
 
 1.  **Set up PostgreSQL:**
+
     - Install PostgreSQL locally or use a cloud service like Neon (which offers a free tier).
+    - Optionally, you can use Docker to run a PostgreSQL container. The following is a sample `docker-compose.yml` file:
+
+      ```yaml
+      # docker run --name postgres_db -p 5432:5432 -e POSTGRES_USER=fastapi_usr -e POSTGRES_PASSWORD=fastapi_pwd -e POSTGRES_DB=fastapi_db -v db_data:/var/lib/postgresql/data -d postgres:17
+
+      services:
+        db:
+          image: postgres:17
+          container_name: postgres_db
+          environment:
+            POSTGRES_USER: fastapi_usr
+            POSTGRES_PASSWORD: fastapi_pwd
+            POSTGRES_DB: fastapi_db
+          ports:
+            - "5432:5432"
+          volumes:
+            - db_data:/var/lib/postgresql/data/
+
+      volumes:
+        db_data:
+      ```
+
+      If you want to connect with the database use the command:
+
+      ```shell
+      docker exec -it <container_name> psql -U <pg_user> -d <pg_database>
+      ```
+
 2.  **Create a Database:**
     - Using a PostgreSQL client (like `psql` shell), connect to your PostgreSQL server.
     - Execute the SQL command to create a new database (e.g., `bookly_DB`):
@@ -77,10 +106,11 @@ A value that is automatically assigned to a column if no value is explicitly pro
       ```
     - Note your PostgreSQL username, password, host, and port.
 3.  **Create .env file:**
+
     - In the root directory of your project, create a file named `.env`.
-    - Add your database connection URL to this file in the format `DATABASE_URL="postgresql+asyncpg://user:password@host:port/database_name"`.
+    - Add your database connection URL to this file in the format `DATABASE_URL=postgresql+asyncpg://user:password@host:port/database_name`.
       ```dotenv
-      DATABASE_URL="postgresql+asyncpg://j35:your_password@localhost:5432/bookly_DB" # Example for local
+      DATABASE_URL=postgresql+asyncpg://j35:your_password@localhost:5432/bookly_DB
       ```
       Replace `j35`, `your_password`, `localhost`, `5432`, and `bookly_DB` with your actual details. If using Neon, copy your provided URL.
 
