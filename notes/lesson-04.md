@@ -165,10 +165,8 @@ A value that is automatically assigned to a column if no value is explicitly pro
       from src.config import config # Import the config object
 
       # Create the async database engine
-      engine = create_engine(config.DATABASE_URL, echo=True) # echo=True logs SQL statements
+      engine = AsyncEngine(create_engine(url=config.DATABASE_URL, echo=True)) # echo=True logs SQL statements
       ```
-
-    - (Note: The tutorial code shows importing `AsyncEngine` but uses the `engine` variable directly in subsequent steps, implying `create_engine` with the async URL provides an async engine).
 
 8.  **Set up FastAPI Lifespan Event:**
     - Go to your main FastAPI application file (where your `FastAPI` instance is created).
@@ -235,140 +233,41 @@ A value that is automatically assigned to a column if no value is explicitly pro
 
     - Run the server again (`fastapi dev source`). Observe the `SELECT 'hello'` statement logged by `echo=True` and the result printed, confirming the database connection.
 
----
-
 11. **Define Database Model:**
 
-    - Create a new file `source/books/models.py`. (Assuming you have a `books` package from previous steps)
+    - Create a new file `src/books/models.py`. (Assuming you have a `books` package from previous steps)
     - Define your database model inheriting from `SQLModel`, setting `table=True`. Include fields with appropriate types and constraints:
 
       ```python
-      from datetime import datetime
       import uuid
-      from typing import Optional # Optional is not used in source but is common for nullable fields
+      from datetime import datetime
 
-      from sqlmodel import Field, SQLModel, Column # Import necessary components
-      from sqlalchemy.dialects import postgresql as PG # Import PostgreSQL dialect
-      from sqlalchemy import text as sa_text # Import SQLAlchemy text for default functions
+      import sqlalchemy.dialects.postgresql as pg
+      from sqlmodel import Column, Field, SQLModel
 
-      class Book(SQLModel, table=True): # Inherit from SQLModel and set table=True
-          # UUID Primary Key with default generation
-          id: uuid.UUID = Field(
-              default_factory=uuid.uuid4, # Use default_factory for callables
-              sa_column=Column(PG.UUID, primary_key=True, nullable=False) # Specify SQLAlchemy column type and constraints
+
+      class Book(SQLModel, table=True):
+          __tablename__ = "books"
+
+          uid: uuid.UUID = Field(
+              sa_column=Column(
+                  pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4()
+              )
           )
-          title: str = Field(index=True) # String field, add index for faster lookups
+          title: str
           author: str
-          publisher: Optional[str] = None # Example nullable field
-          publish_date: Optional[str] = None # Can refine this to datetime later
-          page_count: Optional[int] = None
-          language: Optional[str] = None
+          publisher: str
+          published_date: str
+          page_count: int
+          language: str
+          created_at: datetime = Field(Column(pg.TIMESTAMP, default=datetime.now))
+          updated_at: datetime = Field(Column(pg.TIMESTAMP, default=datetime.now))
 
-          # Timestamps with default to current time on creation/update
-          created_at: datetime = Field(
-               default_factory=datetime.utcnow, # Or datetime.now if not UTC
-               sa_column=Column(PG.TIMESTAMP(timezone=True), nullable=False) # Specify timestamp type, consider timezone
-          )
-          updated_at: datetime = Field(
-               default_factory=datetime.utcnow, # Will need logic to update on actual update events
-               sa_column=Column(PG.TIMESTAMP(timezone=True), nullable=False)
-          )
-
-          __tablename__ = "books" # Explicitly set table name
-
-          # Optional: Add a representation method
-          def __repr__(self):
-               return f"Book(title='{self.title}')"
-
+          def __repr__(self) -> str:
+              return f"Book(title='{self.title}')"
       ```
 
-      _Self-correction:_ The transcript uses `default=uuid.uuid4` and `default=datetime.now`. `default_factory` is the standard Pydantic/SQLModel way for callables, but following the source literally, it's `default`. Also, timezone was not specified for timestamp in the source, just `PG.TIMESTAMP`. Let's stick to the source:
-
-      ```python
-      from datetime import datetime
-      import uuid
-      # Removed Optional as it wasn't explicitly used for nullable in the model definition shown
-
-      from sqlmodel import Field, SQLModel, Column # Import necessary components
-      from sqlalchemy.dialects import postgresql as PG # Import PostgreSQL dialect
-      from sqlalchemy import text # Re-import text from sqlalchemy
-
-      class Book(SQLModel, table=True): # Inherit from SQLModel and set table=True
-          # UUID Primary Key with default generation
-          id: uuid.UUID = Field(
-              default=uuid.uuid4(), # Transcript shows calling uuid.uuid4() directly here, though often it's default_factory
-              sa_column=Column(PG.UUID, primary_key=True, nullable=False) # Specify SQLAlchemy column type and constraints
-          )
-          title: str = Field(index=True) # String field, add index for faster lookups
-          author: str #
-          publisher: str #
-          publish_date: str # - Note: Stored as string in source, can be datetime
-          page_count: int #
-          language: str #
-
-          # Timestamps with default to current time
-          created_at: datetime = Field(
-               default=datetime.now(), # Transcript shows calling datetime.now() directly
-               sa_column=Column(PG.TIMESTAMP(), nullable=False) # Specify timestamp type
-          )
-          updated_at: datetime = Field(
-               default=datetime.now(), # Transcript shows calling datetime.now() directly
-               sa_column=Column(PG.TIMESTAMP(), nullable=False)
-          )
-
-          __tablename__ = "books" # Explicitly set table name
-
-          # Optional: Add a representation method
-          def __repr__(self):
-               return f"Book(title='{self.title}')"
-
-          def __str__(self): # Add __str__ for clearer representation
-               return f"Book(title='{self.title}')"
-      ```
-
-      _Further refinement:_ The transcript shows `default=uuid.uuid4` (without parens) and `default=datetime.now` (without parens), implying passing the function itself to be called by SQLAlchemy/SQLModel upon creation. This aligns with `default_factory`. Let's use the standard `default_factory` for callables as intended, even if the transcript snippet showed `default=...()`. Re-import `Optional` as some fields like `publisher` _are_ shown as potentially nullable in the initial model copy-paste. Let's use the final model definition from the source. The `id` definition uses `default=uuid.uuid4` (no parens), `created_at` and `updated_at` use `default=datetime.now` (no parens). Let's stick to that form from the source.
-
-      ```python
-      from datetime import datetime
-      import uuid
-      from typing import Optional # Included as some fields were Optional initially
-
-      from sqlmodel import Field, SQLModel, Column # Import necessary components
-      from sqlalchemy.dialects import postgresql as PG # Import PostgreSQL dialect
-      # sqlalchemy import text removed, not used in final model
-
-      class Book(SQLModel, table=True): # Inherit from SQLModel and set table=True
-          # UUID Primary Key with default generation
-          id: uuid.UUID = Field(
-              default=uuid.uuid4, # Pass the function itself
-              sa_column=Column(PG.UUID, primary_key=True, nullable=False) # Specify SQLAlchemy column type and constraints
-          )
-          title: str = Field(index=True) # String field, add index for faster lookups
-          author: str #
-          publisher: str #
-          publish_date: str # - Note: Stored as string in source, can be datetime
-          page_count: int #
-          language: str #
-
-          # Timestamps with default to current time
-          created_at: datetime = Field(
-               default=datetime.now, # Pass the function itself
-               sa_column=Column(PG.TIMESTAMP(), nullable=False) # Specify timestamp type
-          )
-          updated_at: datetime = Field(
-               default=datetime.now, # Pass the function itself
-               sa_column=Column(PG.TIMESTAMP(), nullable=False)
-          )
-
-          __tablename__ = "books" # Explicitly set table name
-
-          # Optional: Add a representation method
-          def __repr__(self):
-               return f"Book(title='{self.title}')"
-
-          def __str__(self): # Add __str__ for clearer representation
-               return f"Book(title='{self.title}')"
-      ```
+---
 
 12. **Create Database Tables on Startup:**
 
