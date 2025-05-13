@@ -109,14 +109,16 @@ A value that is automatically assigned to a column if no value is explicitly pro
 
     - In the root directory of your project, create a file named `.env`.
     - Add your database connection URL to this file in the format `DATABASE_URL=postgresql+asyncpg://user:password@host:port/database_name`.
+
+      For example:
+
       ```dotenv
       DATABASE_URL=postgresql+asyncpg://j35:your_password@localhost:5432/bookly_DB
       ```
-      Replace `j35`, `your_password`, `localhost`, `5432`, and `bookly_DB` with your actual details. If using Neon, copy your provided URL.
 
 4.  **Install Dependencies:**
     - Open your terminal in your project's virtual environment.
-    - Install the asynchronous PostgreSQL driver (`asyncpg`) and Pydantic Settings:
+    - Install the asynchronous PostgreSQL driver (`asyncpg`) and `pydantic-settings`:
       ```bash
       pip install asyncpg pydantic-settings
       ```
@@ -127,7 +129,7 @@ A value that is automatically assigned to a column if no value is explicitly pro
 5.  **Configure Pydantic Settings:**
 
     - Create a new Python file `src/config.py`.
-    - Define a class to read your environment variables using Pydantic Settings:
+    - Define a class to read your environment variables using `pydantic-settings`:
 
       ```python
       from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -168,8 +170,6 @@ A value that is automatically assigned to a column if no value is explicitly pro
 
     - (Note: The tutorial code shows importing `AsyncEngine` but uses the `engine` variable directly in subsequent steps, implying `create_engine` with the async URL provides an async engine).
 
----
-
 8.  **Set up FastAPI Lifespan Event:**
     - Go to your main FastAPI application file (where your `FastAPI` instance is created).
     - Import `@asynccontextmanager`:
@@ -195,9 +195,12 @@ A value that is automatically assigned to a column if no value is explicitly pro
 9.  **Test Lifespan Event:**
     - Run your FastAPI application using `fastapi dev` pointing to your source directory:
       ```bash
-      fastapi dev source
+      fastapi dev src
       ```
     - Observe "Server is starting" in the console. Press `Ctrl+C` and observe "Server has been stopped".
+
+---
+
 10. **Demonstrate Database Connection (Initial Test):**
 
     - In `source/db/main.py`, add a simple async function to test the database connection:
