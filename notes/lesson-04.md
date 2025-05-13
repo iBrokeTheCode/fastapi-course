@@ -193,17 +193,16 @@ A value that is automatically assigned to a column if no value is explicitly pro
       app = FastAPI(lifespan=lifespan)
       ```
 9.  **Test Lifespan Event:**
+
     - Run your FastAPI application using `fastapi dev` pointing to your source directory:
       ```bash
       fastapi dev src
       ```
     - Observe "Server is starting" in the console. Press `Ctrl+C` and observe "Server has been stopped".
 
----
-
 10. **Demonstrate Database Connection (Initial Test):**
 
-    - In `source/db/main.py`, add a simple async function to test the database connection:
+    - In `src/db/main.py`, add a simple async function to test the database connection:
 
       ```python
       from sqlmodel import create_engine, text
@@ -235,6 +234,8 @@ A value that is automatically assigned to a column if no value is explicitly pro
       ```
 
     - Run the server again (`fastapi dev source`). Observe the `SELECT 'hello'` statement logged by `echo=True` and the result printed, confirming the database connection.
+
+---
 
 11. **Define Database Model:**
 

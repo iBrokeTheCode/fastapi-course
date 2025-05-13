@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from src.books.routes import book_router
+from src.db.main import init_db
 
 version = "v1"
 
@@ -10,6 +11,7 @@ version = "v1"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("> Server is starting...")
+    await init_db()
     yield
     print("> Server has been stopped...")
 
