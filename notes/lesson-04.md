@@ -267,25 +267,26 @@ A value that is automatically assigned to a column if no value is explicitly pro
               return f"Book(title='{self.title}')"
       ```
 
----
-
 12. **Create Database Tables on Startup:**
 
-    - Modify the `init_db` function in `source/db/main.py` to create tables using SQLModel's metadata:
+    - Modify the `init_db` function in `src/db/main.py` to create tables using SQLModel's metadata:
 
       ```python
-      from sqlmodel import create_engine, text, SQLModel # Import SQLModel class
-      # ... (Import Book model - will need to add this)
-      from source.books.models import Book # Import the Book model
+      from sqlalchemy.ext.asyncio import AsyncEngine
+      from sqlmodel import SQLModel, create_engine
 
-      # ... (engine creation code) ...
+      from src.config import config
+
+      engine = AsyncEngine(create_engine(url=config.DATABASE_URL, echo=True))
+
 
       async def init_db():
-          print("Initializing database: Creating tables...")
-          async with engine.begin() as con: # Use async with for connection
-              # Use run_sync to execute synchronous create_all within the async context
-              await con.run_sync(SQLModel.metadata.create_all)
-          print("Database tables created.")
+          print("> Initializing database connection...")
+          async with engine.begin() as conn:
+              from src.books.models import Book  # noqa: F401 # Disable Ruff lint for this line
+
+              await conn.run_sync(SQLModel.metadata.create_all)
+          print("> Database connection initialized")
       ```
 
     - The `Book` model import is needed so `SQLModel.metadata` knows about it.
@@ -295,7 +296,13 @@ A value that is automatically assigned to a column if no value is explicitly pro
     - Run the server again (`fastapi dev source`).
     - Observe the logs. Due to `echo=True`, you should see `CREATE TABLE books ...` statements being executed.
 14. **Verify Table Creation (Optional but Recommended):**
-    - Connect to your PostgreSQL database using a client (like `psql` shell).
+
+    - Connect to your PostgreSQL database using a client (like `psql` shell). If you're using Docker, enter this command
+
+      ```shell
+      docker exec -it <container_name> psql -U <pg_user> -d <pg_database>
+      ```
+
     - List tables to confirm the `books` table exists:
       ```sql
       \dt
@@ -305,5 +312,3 @@ A value that is automatically assigned to a column if no value is explicitly pro
       \d books
       ```
     - Confirm the columns (`id`, `title`, `author`, etc.), their types (`uuid`, `character varying`, `timestamp`), nullable constraints, and primary key are as defined in your `Book` model.
-
-This completes the process of setting up a persistent database connection and creating tables automatically using SQLModel and FastAPI lifespan events, as demonstrated in the tutorial.
