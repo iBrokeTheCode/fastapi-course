@@ -30,11 +30,49 @@ This tutorial builds upon previous videos, focusing on implementing CRUD (Create
     - Update the `published_date` field in your database model to be a `Date` type (SQLAlchemy/SQLModel type) if you intend to store dates, while potentially receiving it as a string in schemas.
     - **Drop and recreate your database table** to apply model changes. This can be done via a database client (e.g., `psql`) by running `DROP TABLE books;`. The table will be recreated when the server starts with the updated model.
 
+      ```shell
+      docker exec -it <container_name> psql -U <pg_user> -d <pg_database>
+
+      # psql CLI
+      \c db_name
+      DROP TABLE table_name;
+      ```
+
 2.  **Create Pydantic Schemas for Request Data:**
 
     - Create a file (e.g., `schemas.py`) for your data models.
     - Define a class (e.g., `BookCreate`) inheriting from `BaseModel` (or SQLModel) with fields required for _creating_ a book. This typically excludes auto-generated fields like `id`, `created_at`, `updated_at`. Include necessary fields like `title`, `author`, `publisher`, `published_date`, etc.. Ensure UUID fields match the model's UUID type. Define date fields (like `published_date`) as appropriate for incoming data (e.g., `str` initially, though conversion will be needed).
     - Define a class (e.g., `BookUpdate`) inheriting from `BaseModel` for _updating_ a book. This model might have optional fields since not all fields may be updated.
+
+      ```py
+      import uuid
+      from datetime import datetime
+
+      from pydantic import BaseModel
+
+
+      class BookBase(BaseModel):
+          title: str
+          author: str
+          publisher: str
+          page_count: int
+          language: str
+
+
+      class Book(BookBase):
+          uid: uuid.UUID
+          published_date: str
+          created_at: datetime
+          updated_at: datetime
+
+
+      class BookCreate(BookBase):
+          published_date: str
+
+
+      class BookUpdate(BookBase):
+          pass
+      ```
 
 3.  **Create the Service Class:**
 
@@ -44,6 +82,33 @@ This tutorial builds upon previous videos, focusing on implementing CRUD (Create
     - Each service method should accept an **`AsyncSession`** object as a parameter. Use type hinting for the session (`session: AsyncSession`).
     - Creation and update methods should accept a Pydantic model instance (e.g., `book_data: BookCreate`, `update_data: BookUpdate`) representing the input data.
     - Retrieve and delete methods should accept the ID of the resource (e.g., `book_uid: UUID` or `str`, depending on how it's received).
+
+      ```py
+        from sqlmodel.ext.asyncio.session import AsyncSession
+
+        from src.books.schemas import BookCreate, BookUpdate
+
+
+        class BookService:
+            async def get_all_books(self, session: AsyncSession):
+                pass
+
+            async def get_book(self, book_uid: str, session: AsyncSession):
+                pass
+
+            async def create_book(self, book_data: BookCreate, session: AsyncSession):
+                pass
+
+            async def update_book(
+                self, book_uid: str, update_data: BookUpdate, session: AsyncSession
+            ):
+                pass
+
+            async def delete_book(self, book_uid: str, session: AsyncSession):
+                pass
+      ```
+
+---
 
 4.  **Implement Read Operations in the Service Class:**
 
