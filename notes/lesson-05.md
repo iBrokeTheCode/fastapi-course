@@ -25,7 +25,7 @@ This tutorial builds upon previous videos, focusing on implementing CRUD (Create
 
 1.  **Correct Database Model Errors:**
 
-    - Modify timestamp fields (`created_at`, `updated_at`) in your SQLModel class to use `sa.Column` explicitly for SQLAlchemy types instead of being treated purely as Pydantic fields.
+    - Modify timestamp fields (`created_at`, `updated_at`) in your SQLModel class (`src/books/models.py`) to use `sa_column` explicitly for SQLAlchemy types instead of being treated purely as Pydantic fields.
     - Ensure UUID fields are correctly defined, typically not calling `uuid4()` with brackets in the default value definition, as this can lead to generating the same UUID repeatedly.
     - Update the `published_date` field in your database model to be a `Date` type (SQLAlchemy/SQLModel type) if you intend to store dates, while potentially receiving it as a string in schemas.
     - **Drop and recreate your database table** to apply model changes. This can be done via a database client (e.g., `psql`) by running `DROP TABLE books;`. The table will be recreated when the server starts with the updated model.
