@@ -251,7 +251,7 @@ A value that is automatically assigned to a column if no value is explicitly pro
 
           uid: uuid.UUID = Field(
               sa_column=Column(
-                  pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4()
+                  pg.UUID, nullable=False, primary_key=True, default=uuid.uuid4
               )
           )
           title: str
@@ -260,8 +260,8 @@ A value that is automatically assigned to a column if no value is explicitly pro
           published_date: str
           page_count: int
           language: str
-          created_at: datetime = Field(Column(pg.TIMESTAMP, default=datetime.now))
-          updated_at: datetime = Field(Column(pg.TIMESTAMP, default=datetime.now))
+          created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+          updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 
           def __repr__(self) -> str:
               return f"Book(title='{self.title}')"
